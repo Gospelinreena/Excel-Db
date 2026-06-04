@@ -21,13 +21,11 @@ class DataValidator:
         }
     
     def check_required_columns(self):
-        """Check if required columns exist"""
         for col in self.config.REQUIRED_COLUMNS:
             if col not in self.df.columns:
                 self.errors.append(f"Missing required column: {col}")
     
     def check_missing_values(self):
-        """Check for missing values"""
         missing = self.df.isnull().sum()
         for col, count in missing.items():
             if count > 0:
@@ -35,7 +33,6 @@ class DataValidator:
                 self.warnings.append(f"{col}: {count} missing values ({percentage:.1f}%)")
     
     def check_sentiment_range(self):
-        """Check if sentiment values are in valid range"""
         if 'final_sentiment' in self.df.columns:
             min_val = self.df['final_sentiment'].min()
             max_val = self.df['final_sentiment'].max()
@@ -46,7 +43,6 @@ class DataValidator:
                 self.warnings.append(f"Sentiment above {self.config.SENTIMENT_MAX}: {max_val}")
     
     def check_date_format(self):
-        """Check if date column has valid format"""
         if 'date' in self.df.columns:
             try:
                 pd.to_datetime(self.df['date'])
@@ -54,7 +50,6 @@ class DataValidator:
                 self.errors.append("Date column has invalid format")
     
     def check_duplicates(self):
-        """Check for duplicate rows"""
         duplicates = self.df.duplicated().sum()
         if duplicates > 0:
             self.warnings.append(f"Found {duplicates} duplicate rows")
